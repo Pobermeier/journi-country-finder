@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import type Country from "models/country";
 import countries from "db/countries-metadata.json";
-import getDistance from "utils/getDistance";
+import getCountriesByDistance from "utils/getCountriesByDistance";
+import getCountriesByTerm from "utils/getCountriesByTerm";
 
 type CountriesResponseData = {
   success: boolean;
@@ -12,19 +13,6 @@ type CountriesRequestBody = {
   lat?: number;
   lng?: number;
   term?: string;
-};
-
-const getCountriesByDistanceToUser = (countries: Country[], userLat: number, userLng: number) => {
-  return [...countries].sort((country1, country2) => {
-    const country1Distance = getDistance(userLat, userLng, country1.lat, country1.lng);
-    const country2Distance = getDistance(userLat, userLng, country2.lat, country2.lng);
-
-    return country1Distance - country2Distance;
-  });
-};
-
-const getCountriesByTerm = (countries: Country[], term: string) => {
-  return [...countries].filter((country) => country.name.toLowerCase().includes(term));
 };
 
 export default function countriesHandler(
@@ -46,7 +34,7 @@ export default function countriesHandler(
     });
   }
 
-  const countriesByDistance = getCountriesByDistanceToUser(countries, lat, lng);
+  const countriesByDistance = getCountriesByDistance(countries, lat, lng);
 
   const normalizedTerm = term?.toLowerCase().trim() ?? "";
 
