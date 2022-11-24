@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import type Country from "models/Country";
+import type Country from "models/country";
 import countries from "db/countries-metadata.json";
 import getDistance from "utils/getDistance";
 
