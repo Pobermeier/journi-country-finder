@@ -3,6 +3,7 @@ import type Country from "models/country";
 import countries from "db/countries-metadata.json";
 import getCountriesByDistance from "utils/getCountriesByDistance";
 import getCountriesByTerm from "utils/getCountriesByTerm";
+import getNormalizedTerm from "utils/getNormalizedTerm";
 
 type CountriesResponseData = {
   success: boolean;
@@ -15,8 +16,6 @@ type CountriesRequestBody = {
   term?: string;
 };
 
-// longest country name is 56 characters long
-const MAX_CHARS = 56;
 const MAX_DEGREES_LAT = 90;
 const MAX_DEGREES_LNG = 180;
 
@@ -30,7 +29,7 @@ export default function countriesHandler(
       .json({ success: false, data: `Method ${method} is not supported by this route!` });
   }
 
-  const { lat, lng, term } = body as CountriesRequestBody;
+  const { lat, lng, term = "" } = body as CountriesRequestBody;
 
   if (
     typeof lat !== "number" ||
@@ -47,7 +46,7 @@ export default function countriesHandler(
 
   const countriesByDistance = getCountriesByDistance(countries, lat, lng);
 
-  const normalizedTerm = term?.toLowerCase().trim().slice(0, MAX_CHARS) ?? "";
+  const normalizedTerm = getNormalizedTerm(term);
 
   if (!normalizedTerm) {
     return res.status(200).json({ success: true, data: countriesByDistance });
