@@ -19,6 +19,8 @@ type CountriesRequestBody = {
 const MAX_DEGREES_LAT = 90;
 const MAX_DEGREES_LNG = 180;
 
+const countriesCache: Record<string, Country[]> = {};
+
 export default function countriesHandler(
   { method, body }: NextApiRequest,
   res: NextApiResponse<CountriesResponseData>,
@@ -44,7 +46,10 @@ export default function countriesHandler(
     });
   }
 
-  const countriesByDistance = getCountriesByDistance(countries, lat, lng);
+  const cacheKeyToCheck = `${lat + lng}`;
+
+  const countriesByDistance =
+    countriesCache[cacheKeyToCheck] ?? getCountriesByDistance(countries, lat, lng, countriesCache);
 
   const normalizedTerm = getNormalizedTerm(term);
 
