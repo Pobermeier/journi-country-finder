@@ -5,12 +5,12 @@ import getCountriesByDistance from "utils/getCountriesByDistance";
 import getCountriesByTerm from "utils/getCountriesByTerm";
 import getNormalizedTerm from "utils/getNormalizedTerm";
 
-type CountriesResponseData = {
+type GetCountriesResponseData = {
   success: boolean;
   data: string | Country[];
 };
 
-type CountriesRequestBody = {
+type GetCountriesRequestBody = {
   lat?: number;
   lng?: number;
   term?: string;
@@ -23,7 +23,7 @@ const countriesCache: Record<string, Country[]> = {};
 
 export default function countriesHandler(
   { method, body }: NextApiRequest,
-  res: NextApiResponse<CountriesResponseData>,
+  res: NextApiResponse<GetCountriesResponseData>,
 ) {
   if (method !== "GET") {
     return res
@@ -31,7 +31,7 @@ export default function countriesHandler(
       .json({ success: false, data: `Method ${method} is not supported by this route!` });
   }
 
-  const { lat, lng, term = "" } = body as CountriesRequestBody;
+  const { lat, lng, term = "" } = body as GetCountriesRequestBody;
 
   if (
     typeof lat !== "number" ||
