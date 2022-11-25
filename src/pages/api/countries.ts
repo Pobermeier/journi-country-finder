@@ -17,6 +17,8 @@ type CountriesRequestBody = {
 
 // longest country name is 56 characters long
 const MAX_CHARS = 56;
+const MAX_DEGREES_LAT = 90;
+const MAX_DEGREES_LNG = 180;
 
 export default function countriesHandler(
   { method, body }: NextApiRequest,
@@ -30,10 +32,16 @@ export default function countriesHandler(
 
   const { lat, lng, term } = body as CountriesRequestBody;
 
-  if (typeof lat == "undefined" || typeof lng == "undefined") {
+  if (
+    typeof lat !== "number" ||
+    typeof lng !== "number" ||
+    Math.abs(lat) > MAX_DEGREES_LAT ||
+    Math.abs(lng) > MAX_DEGREES_LNG
+  ) {
     return res.status(400).json({
       success: false,
-      data: "Please provide values for both latitude (lat) & longitude (lng) as part of your request!",
+      data: `Please provide valid numeric values for both latitude (lat) & longitude (lng) as part of your request!
+      Values may range from -90 to 90 degrees for lat and -180 to 180 degrees for lng.`,
     });
   }
 
