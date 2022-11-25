@@ -25,7 +25,7 @@ export default function countriesHandler(
   { method, body }: NextApiRequest,
   res: NextApiResponse<GetCountriesResponseData>,
 ) {
-  if (method !== "GET") {
+  if (method !== "POST") {
     return res
       .status(405)
       .json({ success: false, data: `Method ${method} is not supported by this route!` });

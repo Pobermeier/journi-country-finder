@@ -2,6 +2,7 @@ import { GetCountriesRequestBody, GetCountriesResponseData } from "pages/api/cou
 
 export const getCountriesBySearchTerm = async (data: GetCountriesRequestBody) => {
   const res = await fetch("/api/countries", {
+    method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
