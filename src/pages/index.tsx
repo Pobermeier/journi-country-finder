@@ -1,4 +1,5 @@
 import Head from "next/head";
+import CountrySearch from "components/CountrySearch";
 
 const HomePage = () => {
   return (
@@ -10,7 +11,7 @@ const HomePage = () => {
       </Head>
 
       <main>
-        <h1 className="text-3xl font-bold underline">Hello world!</h1>
+        <CountrySearch />
       </main>
     </div>
   );
