@@ -15,6 +15,9 @@ type CountriesRequestBody = {
   term?: string;
 };
 
+// longest country name is 56 characters long
+const MAX_CHARS = 56;
+
 export default function countriesHandler(
   { method, body }: NextApiRequest,
   res: NextApiResponse<CountriesResponseData>,
@@ -36,7 +39,7 @@ export default function countriesHandler(
 
   const countriesByDistance = getCountriesByDistance(countries, lat, lng);
 
-  const normalizedTerm = term?.toLowerCase().trim() ?? "";
+  const normalizedTerm = term?.toLowerCase().trim().slice(0, MAX_CHARS) ?? "";
 
   if (!normalizedTerm) {
     return res.status(200).json({ success: true, data: countriesByDistance });
