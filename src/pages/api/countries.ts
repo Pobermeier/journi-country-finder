@@ -5,15 +5,15 @@ import getCountriesByDistance from "utils/getCountriesByDistance";
 import getCountriesByTerm from "utils/getCountriesByTerm";
 import getNormalizedTerm from "utils/getNormalizedTerm";
 
-type GetCountriesResponseData = {
+export type GetCountriesResponseData = {
   success: boolean;
   data: string | Country[];
 };
 
-type GetCountriesRequestBody = {
-  lat?: number;
-  lng?: number;
-  term?: string;
+export type GetCountriesRequestBody = {
+  lat: number;
+  lng: number;
+  term: string;
 };
 
 const MAX_DEGREES_LAT = 90;
@@ -31,7 +31,7 @@ export default function countriesHandler(
       .json({ success: false, data: `Method ${method} is not supported by this route!` });
   }
 
-  const { lat, lng, term = "" } = body as GetCountriesRequestBody;
+  const { lat, lng, term = "" } = body as Partial<GetCountriesRequestBody>;
 
   if (
     typeof lat !== "number" ||
