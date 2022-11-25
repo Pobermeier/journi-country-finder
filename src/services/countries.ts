@@ -7,6 +7,10 @@ export const getCountriesBySearchTerm = async (data: GetCountriesRequestBody) =>
     body: JSON.stringify(data),
   });
 
+  if (!res.ok) {
+    throw new Error("Network error occured!");
+  }
+
   const resData = (await res.json()) as GetCountriesResponseData;
 
   return resData;
