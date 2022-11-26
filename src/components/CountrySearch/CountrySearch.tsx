@@ -1,4 +1,5 @@
-import { useMemo, useState, useEffect, useRef, useCallback } from "react";
+import { useMemo, useState } from "react";
+import { Combobox } from "@headlessui/react";
 import { ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { useQuery } from "@tanstack/react-query";
 import debounce from "lodash.debounce";
@@ -14,8 +15,6 @@ const CountrySearch = () => {
   const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false);
   const [isDebouncing, setIsDebouncing] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
-
-  const inputWrapperRef = useRef<HTMLInputElement | null>(null);
 
   const { data, isFetching, refetch } = useQuery({
     queryKey: ["countries"],
@@ -43,15 +42,6 @@ const CountrySearch = () => {
     setIsSuggestionsOpen(true);
   };
 
-  const updateSelectedCountry = useCallback(
-    (country: Country) => {
-      setSelectedCountry(country);
-      setIsSuggestionsOpen(false);
-      setSearchTerm(country.name);
-    },
-    [setSelectedCountry, setIsSuggestionsOpen, setSearchTerm],
-  );
-
   const isDropdownRendered =
     searchTerm.length >= MIN_CHAR_LENGTH &&
     data.success &&
@@ -60,75 +50,25 @@ const CountrySearch = () => {
     !isDebouncing &&
     !isFetching;
 
-  const isDropdownBtnDisabled = isFetching && !data.success && !data.data.length;
-
-  const handleClickOutside = useCallback(
-    (event: MouseEvent) => {
-      if (!inputWrapperRef.current?.parentElement?.contains(event.target as Node)) {
-        setIsSuggestionsOpen(false);
-      }
-    },
-    [setIsSuggestionsOpen, inputWrapperRef],
-  );
-
-  const closeSuggestions = useCallback(() => {
-    setIsSuggestionsOpen(false);
-  }, [setIsSuggestionsOpen]);
-
-  useEffect(() => {
-    isDropdownRendered && document.body.addEventListener("click", handleClickOutside, false);
-
-    return () => {
-      document.body.removeEventListener("click", handleClickOutside, false);
-    };
-  }, [isDropdownRendered, handleClickOutside]);
-
-  const searchLabelId = "choose-country-lbl";
-  const listId = "countrySuggestionsList";
-
   return (
     <>
-      <div>
-        <label id={searchLabelId} className="block text-sm font-medium text-gray-700">
+      <Combobox as="div" value={selectedCountry} onChange={setSelectedCountry}>
+        <Combobox.Label className="block text-sm font-medium text-gray-700">
           Choose Country
-        </label>
+        </Combobox.Label>
         <div className="relative mt-1">
-          <input
-            aria-controls={listId}
-            aria-expanded={isDropdownRendered}
-            autoComplete="off"
+          <Combobox.Input
             className="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-            inputMode="search"
             onChange={handleChange}
             placeholder="Enter country name..."
-            ref={inputWrapperRef}
-            role="combobox"
-            type="text"
-            value={searchTerm}
+            displayValue={(country: Country) => country?.name}
           />
-          <button
-            aria-labelledby={searchLabelId}
-            disabled={isDropdownBtnDisabled}
-            className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none"
-            onClick={() => {
-              setIsSuggestionsOpen((isOpen) => !isOpen);
-              refetch();
-            }}
-            tabIndex={-1}
-          >
+          <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
             <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-          </button>
-          {isDropdownRendered && (
-            <SuggestionList
-              ariaLabeledBy={searchLabelId}
-              id={listId}
-              onSelectSuggestion={updateSelectedCountry}
-              selectedCountry={selectedCountry}
-              suggestions={data.data as Country[]}
-            />
-          )}
+          </Combobox.Button>
+          {isDropdownRendered && <SuggestionList suggestions={data.data as Country[]} />}
         </div>
-      </div>
+      </Combobox>
       {selectedCountry && <div>Selected Country: {selectedCountry.name}</div>}
     </>
   );
