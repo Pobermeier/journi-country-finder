@@ -7,6 +7,7 @@ import clsx from "clsx";
 import { type CountryClient } from "models/country";
 import SuggestionList from "components/CountrySearch/components/SuggestionList";
 import CountryDetails from "components/CountryDetails";
+import Loading from "components/Loading";
 import { getCountriesBySearchTerm, getUserPosition } from "services/countries";
 
 const QUERY_DEBOUNCE_MS = 300;
@@ -79,6 +80,8 @@ const CountrySearch = () => {
     !isDebouncing &&
     !isFetching;
 
+  const isResetBtnVisible = !!searchTerm && !isFetching;
+
   return (
     <>
       <Combobox
@@ -100,7 +103,7 @@ const CountrySearch = () => {
           placeholder="Enter a country name..."
           displayValue={(country: CountryClient) => country?.name}
         />
-        {searchTerm && (
+        {isResetBtnVisible && (
           <button
             className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none"
             onClick={resetSearch}
@@ -108,11 +111,12 @@ const CountrySearch = () => {
             <XMarkIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
           </button>
         )}
-        {isError && (
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-            <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
-          </div>
-        )}
+
+        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+          {isError && <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />}
+          {isFetching && <Loading className="h-5 w-5" />}
+        </div>
+
         {isDropdownRendered && (
           <SuggestionList suggestions={countriesData.data as CountryClient[]} />
         )}
