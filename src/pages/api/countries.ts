@@ -4,7 +4,7 @@ import countries from "db/countries-metadata.json";
 import getCountriesByDistance from "utils/getCountriesByDistance";
 import getCountriesByTerm from "utils/getCountriesByTerm";
 import getNormalizedTerm from "utils/getNormalizedTerm";
-import { Cache, getCache, setCache } from "utils/cache";
+import { Cache, getCache, setCache } from "utils/caching";
 
 export type GetCountriesResponseData = {
   success: boolean;
