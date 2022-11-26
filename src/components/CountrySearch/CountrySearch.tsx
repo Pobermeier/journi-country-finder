@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import clsx from "clsx";
 import { Combobox } from "@headlessui/react";
-import { ChevronUpDownIcon } from "@heroicons/react/20/solid";
+import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 import { useQuery } from "@tanstack/react-query";
 import debounce from "lodash.debounce";
 import { type CountryClient } from "models/country";
@@ -17,14 +18,15 @@ const CountrySearch = () => {
   const [isDebouncing, setIsDebouncing] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<CountryClient | null>(null);
 
-  const { data, isFetching, refetch } = useQuery({
+  const { data, isFetching, refetch, isError, error } = useQuery({
     queryKey: ["countries"],
     queryFn: () =>
       getCountriesBySearchTerm({ lat: FALLBACK_LAT, lng: FALLBACK_LNG, term: searchTerm }),
     enabled: false,
-    initialData: () => ({ success: false, data: [] }),
+    retry: false,
   });
 
+  // debounce user input, so we do not hit the api on each keystroke
   const debounceGetCountries = useMemo(
     () =>
       debounce(() => {
@@ -34,18 +36,20 @@ const CountrySearch = () => {
     [refetch],
   );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchTerm(e.target.value);
 
-    setIsDebouncing(true);
-    debounceGetCountries();
-    setIsSuggestionsOpen(true);
-  };
-
+      setIsDebouncing(true);
+      debounceGetCountries();
+      setIsSuggestionsOpen(true);
+    },
+    [debounceGetCountries],
+  );
   const isDropdownRendered =
     !!searchTerm &&
-    data.success &&
-    data.data.length > 0 &&
+    data?.success &&
+    data?.data.length > 0 &&
     isSuggestionsOpen &&
     !isDebouncing &&
     !isFetching;
@@ -58,17 +62,30 @@ const CountrySearch = () => {
         </Combobox.Label>
         <div className="relative mt-1">
           <Combobox.Input
-            className="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+            autoComplete="off"
+            className={clsx(
+              "w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm",
+              isError
+                ? "border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500"
+                : "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500",
+            )}
             onChange={handleChange}
-            placeholder="Enter country name..."
+            placeholder="Enter a country name..."
             displayValue={(country: CountryClient) => country?.name}
           />
-          <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
-            <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-          </Combobox.Button>
+          {isError && (
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+              <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
+            </div>
+          )}
           {isDropdownRendered && <SuggestionList suggestions={data.data as CountryClient[]} />}
         </div>
       </Combobox>
+      {isError && (
+        <p className="mt-2 text-sm text-red-600" role="alert">
+          {(error as Error).message}
+        </p>
+      )}
       {selectedCountry && <div>Selected Country: {selectedCountry.name}</div>}
     </>
   );

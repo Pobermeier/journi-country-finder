@@ -7,11 +7,17 @@ export const getCountriesBySearchTerm = async (data: GetCountriesRequestBody) =>
     body: JSON.stringify(data),
   });
 
-  if (!res.ok) {
-    throw new Error("Network error occured!");
-  }
-
   const resData = (await res.json()) as GetCountriesResponseData;
+
+  if (!res.ok) {
+    if (!resData.success) {
+      throw new Error(resData.data as string);
+    }
+
+    throw new Error(
+      "A network error occured! Please try again later or check your internet connection",
+    );
+  }
 
   return resData;
 };
