@@ -1,6 +1,6 @@
-import type Country from "models/country";
+import { type CountryClient } from "models/country";
 
-const getCountriesByTerm = (countries: Country[], term: string) => {
+const getCountriesByTerm = (countries: CountryClient[], term: string) => {
   return [...countries].filter((country) => country.name.toLowerCase().includes(term));
 };
 

@@ -1,4 +1,4 @@
-type Country = {
+export type Country = {
   scalerank: number;
   labelrank: number;
   featurecla: string;
@@ -33,4 +33,7 @@ type Country = {
   lng: number;
 };
 
-export default Country;
+export type CountryClient = Pick<
+  Country,
+  "name" | "pop_est" | "type" | "iso_a3" | "flag_png" | "gdp_md_est" | "sovereignt" | "lat" | "lng"
+>;

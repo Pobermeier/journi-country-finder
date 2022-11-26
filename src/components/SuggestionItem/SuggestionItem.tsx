@@ -2,10 +2,10 @@ import Image from "next/image";
 import clsx from "clsx";
 import { Combobox } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/20/solid";
-import type Country from "models/country";
+import { type CountryClient } from "models/country";
 
 type SuggestionItemProps = {
-  suggestion: Country;
+  suggestion: CountryClient;
 };
 
 const SuggestionItem = ({ suggestion }: SuggestionItemProps) => {

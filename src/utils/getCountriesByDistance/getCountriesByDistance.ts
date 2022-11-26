@@ -1,11 +1,11 @@
-import type Country from "models/country";
+import { type CountryClient } from "models/country";
 import getDistance from "utils/getDistance";
 
 const getCountriesByDistanceToUser = (
-  countries: Country[],
+  countries: CountryClient[],
   userLat: number,
   userLng: number,
-  cache?: Record<string, Country[]>,
+  cache?: Record<string, CountryClient[]>,
 ) => {
   const sortedCountries = [...countries].sort((country1, country2) => {
     const country1Distance = getDistance(userLat, userLng, country1.lat, country1.lng);
