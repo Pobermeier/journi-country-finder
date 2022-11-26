@@ -1,3 +1,4 @@
+import { memo } from "react";
 import Image from "next/image";
 import { type CountryClient } from "models/country";
 import CountryStat from "components/CountryStat";
@@ -50,4 +51,4 @@ const CountryDetails = ({ country }: CountryDetailsProps) => {
   );
 };
 
-export default CountryDetails;
+export default memo(CountryDetails);
