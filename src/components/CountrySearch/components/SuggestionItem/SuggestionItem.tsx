@@ -1,7 +1,7 @@
 import Image from "next/image";
-import clsx from "clsx";
 import { Combobox } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/20/solid";
+import clsx from "clsx";
 import { type CountryClient } from "models/country";
 
 type SuggestionItemProps = {
