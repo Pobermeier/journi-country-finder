@@ -1,7 +1,7 @@
 const EARTH_RADIUS_METRES = 6371e3;
 
 /**
- * This function uses the ‘haversine’ formula to calculate the great-circle distance between two points.
+ * Returns the great-circle distance between two points using the ‘haversine’ formula for calculation.
  * That is, the shortest distance over the earth’s surface – giving an ‘as-the-crow-flies’ distance between the points
  * https://en.wikipedia.org/wiki/Haversine_formula
  * @param lat1 latitude of location 1 in degrees
