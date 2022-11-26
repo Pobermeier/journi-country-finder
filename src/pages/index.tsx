@@ -8,7 +8,7 @@ const HomePage = () => {
           Country Finder
         </h2>
         <p className="mt-5 text-lg text-gray-500">
-          Search for a country to learn some interesting facts about it!
+          Search and select a country to learn some interesting facts about it!
         </p>
       </div>
 
