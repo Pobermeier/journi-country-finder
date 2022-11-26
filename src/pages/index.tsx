@@ -5,7 +5,7 @@ const HomePage = () => {
   return (
     <div>
       <Head>
-        <title>🥇 Journi • Country Finder</title>
+        <title>🥇 Journi • Country Search Coding Challenge</title>
         <meta name="description" content="A simple country finder app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
