@@ -1,7 +1,7 @@
 import { memo } from "react";
 import Image from "next/image";
 import { type CountryClient } from "models/country";
-import CountryStat from "components/CountryStat";
+import CountryStat from "components/CountryDetails/components/CountryStat";
 
 type CountryDetailsProps = {
   country: CountryClient;

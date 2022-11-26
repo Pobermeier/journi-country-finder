@@ -1,6 +1,6 @@
 import { Combobox } from "@headlessui/react";
 import { type CountryClient } from "models/country";
-import SuggestionItem from "components/SuggestionItem";
+import SuggestionItem from "components/CountrySearch/components/SuggestionItem";
 
 type SuggestionListProps = {
   suggestions: CountryClient[];

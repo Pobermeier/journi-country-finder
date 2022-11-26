@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import debounce from "lodash.debounce";
 import clsx from "clsx";
 import { type CountryClient } from "models/country";
-import SuggestionList from "components/SuggestionList";
+import SuggestionList from "components/CountrySearch/components/SuggestionList";
 import CountryDetails from "components/CountryDetails";
 import { getCountriesBySearchTerm, getUserPosition } from "services/countries";
 
