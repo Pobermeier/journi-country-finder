@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.fullErrorPage_animationClockwise__cX1MF {
+  -webkit-animation: fullErrorPage_rotate__R9XhB 10s linear infinite;
+  animation: fullErrorPage_rotate__R9XhB 10s linear infinite;
+  transform-box: fill-box;
+  -webkit-transform-origin: center;
+  transform-origin: center;
+}
+
+@keyframes fullErrorPage_rotate__R9XhB {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(1turn);
+    transform: rotate(1turn);
+  }
+}
