@@ -58,7 +58,11 @@ const CountrySearch = () => {
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchTerm(e.target.value);
+      const newTerm = e.target.value;
+
+      setSearchTerm(newTerm);
+
+      if (!newTerm) return;
 
       setIsDebouncing(true);
       debounceGetCountries();
