@@ -4,6 +4,7 @@ import countries from "db/countries-metadata.json";
 import getCountriesByDistance from "utils/getCountriesByDistance";
 import getCountriesByTerm from "utils/getCountriesByTerm";
 import getNormalizedTerm from "utils/getNormalizedTerm";
+import { Cache, getCache, setCache } from "utils/cache";
 
 export type GetCountriesResponseData = {
   success: boolean;
@@ -18,6 +19,8 @@ export type GetCountriesRequestBody = {
 
 const MAX_DEGREES_LAT = 90;
 const MAX_DEGREES_LNG = 180;
+// longest country name is 56 characters long
+const MAX_CHARS = 56;
 
 // Initially create a new data array when server starts
 // so we only send the data the client requires over the wire
@@ -33,7 +36,7 @@ const countriesClient: CountryClient[] = (countries as Country[]).map((country) 
   lng: country.lng,
 }));
 
-const countriesCache: Record<string, CountryClient[]> = {};
+const cache: Cache<CountryClient[]> = {};
 
 export default function countriesHandler(
   { method, body }: NextApiRequest,
@@ -60,15 +63,15 @@ export default function countriesHandler(
     });
   }
 
-  const cacheKeyToCheck = `${lat + lng}`;
+  const cacheKey = `${lat + lng}`;
 
   // Sorted lists get cached using the users-latitude & longitude as the cache-key to avoid unnecessary computations
-  // This is just to show the concept, in practice there is not enough data here to see any real difference in response times
+  // This is just to show the concept, in practice there is not enough data to see any real difference in response times
   const countriesByDistance =
-    countriesCache[cacheKeyToCheck] ??
-    getCountriesByDistance(countriesClient, lat, lng, countriesCache);
+    getCache<CountryClient[]>(cacheKey, cache) ??
+    setCache<CountryClient[]>(getCountriesByDistance(countriesClient, lat, lng), cacheKey, cache);
 
-  const normalizedTerm = getNormalizedTerm(term);
+  const normalizedTerm = getNormalizedTerm(term, MAX_CHARS);
 
   if (!normalizedTerm) {
     return res.status(200).json({ success: true, data: countriesByDistance });
