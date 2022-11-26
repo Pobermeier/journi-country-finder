@@ -1,15 +1,16 @@
 import { useCallback, useMemo, useState } from "react";
-import clsx from "clsx";
 import { Combobox } from "@headlessui/react";
 import { ExclamationCircleIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { useQuery } from "@tanstack/react-query";
 import debounce from "lodash.debounce";
+import clsx from "clsx";
 import { type CountryClient } from "models/country";
 import SuggestionList from "components/SuggestionList";
-import { getCountriesBySearchTerm } from "services/countries";
 import CountryDetails from "components/CountryDetails";
+import { getCountriesBySearchTerm, getUserPosition } from "services/countries";
 
 const QUERY_DEBOUNCE_MS = 300;
+// Fallback coordinates (Vienna)
 const FALLBACK_LAT = 48.2;
 const FALLBACK_LNG = 16.3667;
 
@@ -19,10 +20,27 @@ const CountrySearch = () => {
   const [isDebouncing, setIsDebouncing] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<CountryClient | null>(null);
 
-  const { data, isFetching, refetch, isError, error } = useQuery({
+  const { data: geoData } = useQuery({
+    queryKey: ["coordinates"],
+    queryFn: getUserPosition,
+    staleTime: Infinity,
+  });
+
+  const {
+    data: countriesData,
+    isFetching,
+    refetch,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["countries"],
-    queryFn: () =>
-      getCountriesBySearchTerm({ lat: FALLBACK_LAT, lng: FALLBACK_LNG, term: searchTerm }),
+    queryFn: () => {
+      // in case the rate limiting of the Geolocation API hits, use hardcoded fallback values
+      const lat = geoData?.lat ?? FALLBACK_LAT;
+      const lng = geoData?.lon ?? FALLBACK_LNG;
+
+      return getCountriesBySearchTerm({ lat, lng, term: searchTerm });
+    },
     enabled: false,
     retry: false,
   });
@@ -47,18 +65,19 @@ const CountrySearch = () => {
     },
     [debounceGetCountries],
   );
-  const isDropdownRendered =
-    !!searchTerm &&
-    data?.success &&
-    data?.data.length > 0 &&
-    isSuggestionsOpen &&
-    !isDebouncing &&
-    !isFetching;
 
   const resetSearch = () => {
     setSearchTerm("");
     setSelectedCountry(null);
   };
+
+  const isDropdownRendered =
+    !!searchTerm &&
+    countriesData?.success &&
+    countriesData?.data.length > 0 &&
+    isSuggestionsOpen &&
+    !isDebouncing &&
+    !isFetching;
 
   return (
     <>
@@ -94,7 +113,9 @@ const CountrySearch = () => {
             <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
           </div>
         )}
-        {isDropdownRendered && <SuggestionList suggestions={data.data as CountryClient[]} />}
+        {isDropdownRendered && (
+          <SuggestionList suggestions={countriesData.data as CountryClient[]} />
+        )}
       </Combobox>
       {isError && (
         <p className="mt-2 text-sm text-red-600" role="alert">
