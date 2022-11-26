@@ -8,7 +8,8 @@ import SuggestionList from "components/SuggestionList";
 import { getCountriesBySearchTerm } from "services/countries";
 
 const QUERY_DEBOUNCE_MS = 300;
-const MIN_CHAR_LENGTH = 2;
+const FALLBACK_LAT = 48.2;
+const FALLBACK_LNG = 16.3667;
 
 const CountrySearch = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -18,7 +19,8 @@ const CountrySearch = () => {
 
   const { data, isFetching, refetch } = useQuery({
     queryKey: ["countries"],
-    queryFn: () => getCountriesBySearchTerm({ lat: 49, lng: 12, term: searchTerm }),
+    queryFn: () =>
+      getCountriesBySearchTerm({ lat: FALLBACK_LAT, lng: FALLBACK_LNG, term: searchTerm }),
     enabled: false,
     initialData: () => ({ success: false, data: [] }),
   });
@@ -35,15 +37,13 @@ const CountrySearch = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
 
-    if (searchTerm.length < MIN_CHAR_LENGTH) return;
-
     setIsDebouncing(true);
     debounceGetCountries();
     setIsSuggestionsOpen(true);
   };
 
   const isDropdownRendered =
-    searchTerm.length >= MIN_CHAR_LENGTH &&
+    !!searchTerm &&
     data.success &&
     data.data.length > 0 &&
     isSuggestionsOpen &&
