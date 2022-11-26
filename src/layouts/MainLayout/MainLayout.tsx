@@ -12,6 +12,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
       <Head>
         <title>🥇 Journi • Country Search Coding Challenge</title>
         <meta name="description" content="A simple country finder app" />
+        <meta name="robots" content="noindex,nofollow" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="h-screen flex flex-col">
