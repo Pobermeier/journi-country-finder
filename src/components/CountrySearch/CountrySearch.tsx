@@ -57,11 +57,9 @@ const CountrySearch = () => {
   return (
     <>
       <Combobox as="div" value={selectedCountry} onChange={setSelectedCountry}>
-        <Combobox.Label className="block text-sm font-medium text-gray-700">
-          Choose Country
-        </Combobox.Label>
         <div className="relative mt-1">
           <Combobox.Input
+            aria-label="Choose Country"
             autoComplete="off"
             className={clsx(
               "w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm",
