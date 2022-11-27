@@ -60,8 +60,6 @@ const CountrySearch = ({ onCountrySelect, selectedCountry }: CountrySearchProps)
       const newTerm = e.target.value;
       setSearchTerm(newTerm);
 
-      if (!newTerm) return;
-
       debounceGetCountries();
     },
     [debounceGetCountries],
