@@ -17,20 +17,19 @@ const FALLBACK_LNG = 16.3667;
 
 const CountrySearch = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false);
-  const [isDebouncing, setIsDebouncing] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
 
   const { data: geoData } = useQuery({
-    queryKey: ["coordinates"],
+    queryKey: ["location"],
     queryFn: getUserPosition,
     staleTime: Infinity,
+    retry: false,
   });
 
   const {
     data: countriesData,
     isFetching,
-    refetch,
+    refetch: fetchCountries,
     isError,
     error,
   } = useQuery({
@@ -50,23 +49,19 @@ const CountrySearch = () => {
   const debounceGetCountries = useMemo(
     () =>
       debounce(() => {
-        refetch();
-        setIsDebouncing(false);
+        fetchCountries();
       }, QUERY_DEBOUNCE_MS),
-    [refetch],
+    [fetchCountries],
   );
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const newTerm = e.target.value;
-
       setSearchTerm(newTerm);
 
       if (!newTerm) return;
 
-      setIsDebouncing(true);
       debounceGetCountries();
-      setIsSuggestionsOpen(true);
     },
     [debounceGetCountries],
   );
@@ -76,13 +71,8 @@ const CountrySearch = () => {
     setSelectedCountry(null);
   };
 
-  const isDropdownRendered =
-    !!searchTerm &&
-    countriesData?.success &&
-    countriesData?.data.length > 0 &&
-    isSuggestionsOpen &&
-    !isDebouncing &&
-    !isFetching;
+  const isSuggestionsDropdownOpen =
+    !!searchTerm && countriesData?.success && countriesData?.data.length > 0;
 
   const isResetBtnVisible = !!searchTerm && !isFetching;
 
@@ -121,7 +111,9 @@ const CountrySearch = () => {
           {isFetching && <Loading className="h-5 w-5" />}
         </div>
 
-        {isDropdownRendered && <SuggestionList suggestions={countriesData.data as Country[]} />}
+        {isSuggestionsDropdownOpen && (
+          <SuggestionList suggestions={countriesData.data as Country[]} />
+        )}
       </Combobox>
       {isError && (
         <p className="mt-2 text-sm text-red-600" role="alert">
