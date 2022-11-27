@@ -16,6 +16,7 @@
     "start": "next start",
     "start:static": "npx serve ./out",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "ts-validate": "tsc --pretty --noEmit"
   },
   "devDependencies": {
