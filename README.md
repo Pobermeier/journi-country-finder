@@ -62,7 +62,6 @@ Unit- & Component-tests can be run locally with
 
 In case there is an issue with running the app locally there is a live demo available [here](https://journi-country-finder.vercel.app/).
 
-
 ## Screenshot
 
 ![image](https://user-images.githubusercontent.com/19672749/204149314-72c3f8a4-9a80-4fba-8880-1a301e59949b.png)
