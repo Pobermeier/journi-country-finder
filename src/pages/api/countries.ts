@@ -6,6 +6,11 @@ import getCountriesByTerm from "utils/getCountriesByTerm";
 import getNormalizedTerm from "utils/getNormalizedTerm";
 import { Cache, getCache, setCache } from "utils/caching";
 
+const MAX_DEGREES_LAT = 90;
+const MAX_DEGREES_LNG = 180;
+// longest country name is 56 characters long
+const MAX_CHARS = 56;
+
 export type GetCountriesResponseData = {
   success: boolean;
   data: string | Country[];
@@ -16,11 +21,6 @@ export type GetCountriesRequestBody = {
   lng: number;
   term: string;
 };
-
-const MAX_DEGREES_LAT = 90;
-const MAX_DEGREES_LNG = 180;
-// longest country name is 56 characters long
-const MAX_CHARS = 56;
 
 // Initially create a new data array when server starts
 // so we only send the data the client requires over the wire
