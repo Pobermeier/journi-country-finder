@@ -9,8 +9,6 @@ On the frontend-side the user gets presented with a search input which he can us
 
 ## Remarks
 
-Before we get started here are some remarks on this project for any Reviewer:
-
 - Instead of fetching the current position from the Geolocation API on the server-side I've moved this functionality to the client. I've understood from the project requirements that this is a valid alternative. The position gets fetched once on the first page load (after that it will be cached by react-query until the next page load) and will be passed to the backend as part of any search requests. Should the API rate limit of the Geo-API be reached (25 calls per minute from one IP) I use hardcoded values as a fallback.
 - I've implemented the API-endpoint as a POST-request, as in a real world scenario I would consider the user's location as privacy-sensitive information that should not be "leaked" inside of query-params.
 - I wanted to have for the search input a fully accessible component (screen reader accessible + proper keyboard usage) to provide the best possible user experience. As implementing all of these features would not fit into the given timeframe I've opted for a third party (headless UI) component to implement an accessible Combobox-pattern. I've added addtional features on top like showing any errors to the user, a notification for the user if there are no results found and a loading-indicator during data-fetching. Also the user input is getting debounced for 300ms so that the backend does not get hit on every keystroke. 
