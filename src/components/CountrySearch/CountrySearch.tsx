@@ -1,13 +1,11 @@
 import { useCallback, useMemo, useState } from "react";
 import { Combobox } from "@headlessui/react";
-import { ExclamationCircleIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { useQuery } from "@tanstack/react-query";
 import debounce from "lodash.debounce";
-import clsx from "clsx";
 import { type Country } from "models/country";
 import SuggestionList from "components/CountrySearch/components/SuggestionList";
 import CountryDetails from "components/CountryDetails";
-import Loading from "components/Loading";
+import SearchInput from "./components/SearchInput";
 import { getCountriesBySearchTerm, getUserPosition } from "services/countries";
 
 const QUERY_DEBOUNCE_MS = 300;
@@ -74,8 +72,6 @@ const CountrySearch = () => {
   const isSuggestionsDropdownOpen =
     !!searchTerm && countriesData?.success && countriesData?.data.length > 0;
 
-  const isResetBtnVisible = !!searchTerm && !isFetching;
-
   const hasNoResults = !!searchTerm && countriesData?.success && countriesData?.data.length === 0;
 
   return (
@@ -86,33 +82,13 @@ const CountrySearch = () => {
         value={selectedCountry}
         onChange={setSelectedCountry}
       >
-        <Combobox.Input
-          aria-label="Choose Country"
-          autoComplete="off"
-          className={clsx(
-            "w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 sm:text-sm",
-            isError
-              ? "border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500"
-              : "border-gray-300 focus:border-sky-500 focus:ring-sky-500",
-          )}
+        <SearchInput
+          isErrorIconVisible={isError}
+          isLoadingIndicatorVisible={isFetching}
+          isResetBtnVisible={!!searchTerm && !isFetching}
           onChange={handleChange}
-          placeholder="Enter a country name..."
-          displayValue={(country: Country) => country?.name}
+          onResetBtnClick={resetSearch}
         />
-        {isResetBtnVisible && (
-          <button
-            className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none"
-            onClick={resetSearch}
-          >
-            <XMarkIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-          </button>
-        )}
-
-        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-          {isError && <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />}
-          {isFetching && <Loading className="h-5 w-5" />}
-        </div>
-
         {isSuggestionsDropdownOpen && (
           <SuggestionList suggestions={countriesData.data as Country[]} />
         )}
