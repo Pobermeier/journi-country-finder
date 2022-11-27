@@ -49,8 +49,7 @@ In case there is an issue with running the app locally there is a live demo avai
 
 ## Screenshot
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
-
+![image](https://user-images.githubusercontent.com/19672749/204149314-72c3f8a4-9a80-4fba-8880-1a301e59949b.png)
 
 ## Tech Stack
 
@@ -74,7 +73,7 @@ If the search term is omitted the endpoint returns all countries sorted by dista
 
 If a search term is provided the endpoint returns all countries whose name start with the provided term in the same order as explained above.
 
-Request body params (JSON):
+__Available body params (JSON):__
 | Value | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 | `lat`      | `number` | **Required**. The latitude of the user's current location |
