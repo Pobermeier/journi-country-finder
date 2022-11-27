@@ -55,7 +55,7 @@ const CountrySearch = ({ onCountrySelect, selectedCountry }: CountrySearchProps)
     [fetchCountries],
   );
 
-  const handleChange = useCallback(
+  const updateSearchTerm = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const newTerm = e.target.value;
       setSearchTerm(newTerm);
@@ -89,7 +89,7 @@ const CountrySearch = ({ onCountrySelect, selectedCountry }: CountrySearchProps)
           isErrorIconVisible={isError}
           isLoadingIndicatorVisible={isFetching}
           isResetBtnVisible={!!searchTerm && !isFetching}
-          onChange={handleChange}
+          onChange={updateSearchTerm}
           onResetBtnClick={resetSearch}
         />
         {isSuggestionsDropdownOpen && (
