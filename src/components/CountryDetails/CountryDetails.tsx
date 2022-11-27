@@ -3,18 +3,24 @@ import Image from "next/image";
 import { type Country } from "models/country";
 import CountryStat from "components/CountryDetails/components/CountryStat";
 
+const ONE_MILLION = 1000000;
+
 type CountryDetailsProps = {
   country: Country;
 };
 
-const ONE_MILLION = 1000000;
-
 const CountryDetails = ({ country }: CountryDetailsProps) => {
   const { flag_png, name, iso_a3, sovereignt, type, pop_est, gdp_md_est, lat, lng } = country;
 
-  const gdpPerCapitaUsd = (gdp_md_est * ONE_MILLION) / pop_est;
+  const gdpPerCapitaUsd = ((gdp_md_est * ONE_MILLION) / pop_est).toLocaleString(undefined, {
+    style: "currency",
+    currency: "USD",
+  });
 
-  const isSovereign = type === "Sovereign country";
+  const isSovereignCountry = type === "Sovereign country" || type === "Country";
+  const population = pop_est.toLocaleString();
+  const latitude = `${lat.toFixed(2)}°`;
+  const longitude = `${lng.toFixed(2)}°`;
 
   return (
     <div className="mx-auto max-w-7xl py-8 sm:py-12 lg:py-16">
@@ -34,17 +40,11 @@ const CountryDetails = ({ country }: CountryDetailsProps) => {
       <div className="mt-8 overflow-hidden">
         <dl className="-mx-8 -mt-8 flex flex-wrap">
           <CountryStat title="Type" content={type} />
-          {!isSovereign && <CountryStat title="Sovereignity" content={sovereignt} />}
-          <CountryStat title="Population (Est.)" content={pop_est.toLocaleString()} />
-          <CountryStat
-            title="GDP per capita (Est.)"
-            content={gdpPerCapitaUsd.toLocaleString(undefined, {
-              style: "currency",
-              currency: "USD",
-            })}
-          />
-          <CountryStat title="Latitude" content={`${lat.toFixed(2)}°`} />
-          <CountryStat title="Longitude" content={`${lng.toFixed(2)}°`} />
+          {!isSovereignCountry && <CountryStat title="Sovereignity" content={sovereignt} />}
+          <CountryStat title="Population (Est.)" content={population} />
+          <CountryStat title="GDP per capita (Est.)" content={gdpPerCapitaUsd} />
+          <CountryStat title="Latitude" content={latitude} />
+          <CountryStat title="Longitude" content={longitude} />
         </dl>
       </div>
     </div>
