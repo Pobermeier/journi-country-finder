@@ -9,7 +9,7 @@ import getDistance from "utils/getDistance";
  * @returns an array of countries sorted by distance to the user's position ascending
  */
 const getCountriesByDistanceToUser = (countries: Country[], userLat: number, userLng: number) => {
-  const sortedCountries = [...countries].sort((firstCountry, secondCountry) => {
+  return [...countries].sort((firstCountry, secondCountry) => {
     const firstCountryDistance = getDistance(userLat, userLng, firstCountry.lat, firstCountry.lng);
     const secondCountryDistance = getDistance(
       userLat,
@@ -20,8 +20,6 @@ const getCountriesByDistanceToUser = (countries: Country[], userLat: number, use
 
     return firstCountryDistance - secondCountryDistance;
   });
-
-  return sortedCountries;
 };
 
 export default getCountriesByDistanceToUser;
