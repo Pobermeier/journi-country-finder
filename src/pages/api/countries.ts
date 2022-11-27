@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { type CountryClient, type Country } from "models/country";
+import { type Country, type CountryRaw } from "models/country";
 import countries from "db/countries-metadata.json";
 import getCountriesByDistance from "utils/getCountriesByDistance";
 import getCountriesByTerm from "utils/getCountriesByTerm";
@@ -8,7 +8,7 @@ import { Cache, getCache, setCache } from "utils/caching";
 
 export type GetCountriesResponseData = {
   success: boolean;
-  data: string | CountryClient[];
+  data: string | Country[];
 };
 
 export type GetCountriesRequestBody = {
@@ -24,7 +24,7 @@ const MAX_CHARS = 56;
 
 // Initially create a new data array when server starts
 // so we only send the data the client requires over the wire
-const countriesClient: CountryClient[] = (countries as Country[]).map((country) => ({
+const countriesClient: Country[] = (countries as CountryRaw[]).map((country) => ({
   flag_png: country.flag_png,
   gdp_md_est: country.gdp_md_est,
   iso_a3: country.iso_a3,
@@ -36,7 +36,7 @@ const countriesClient: CountryClient[] = (countries as Country[]).map((country) 
   lng: country.lng,
 }));
 
-const cache: Cache<CountryClient[]> = {};
+const cache: Cache<Country[]> = {};
 
 export default function countriesHandler(
   { method, body }: NextApiRequest,
@@ -68,8 +68,8 @@ export default function countriesHandler(
   // Sorted lists get cached using the users-latitude & longitude as the cache-key to avoid unnecessary computations
   // This is just to show the concept, in practice there is not enough data to see any real difference in response times
   const countriesByDistance =
-    getCache<CountryClient[]>(cacheKey, cache) ??
-    setCache<CountryClient[]>(getCountriesByDistance(countriesClient, lat, lng), cacheKey, cache);
+    getCache<Country[]>(cacheKey, cache) ??
+    setCache<Country[]>(getCountriesByDistance(countriesClient, lat, lng), cacheKey, cache);
 
   const normalizedTerm = getNormalizedTerm(term, MAX_CHARS);
 

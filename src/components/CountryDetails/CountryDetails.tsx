@@ -1,10 +1,10 @@
 import { memo } from "react";
 import Image from "next/image";
-import { type CountryClient } from "models/country";
+import { type Country } from "models/country";
 import CountryStat from "components/CountryDetails/components/CountryStat";
 
 type CountryDetailsProps = {
-  country: CountryClient;
+  country: Country;
 };
 
 const ONE_MILLION = 1000000;

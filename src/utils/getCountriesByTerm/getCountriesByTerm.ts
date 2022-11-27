@@ -1,4 +1,4 @@
-import { type CountryClient } from "models/country";
+import { type Country } from "models/country";
 
 /**
  * Given an array of countries and a search term, this function returns an array of countries whose name start
@@ -7,7 +7,7 @@ import { type CountryClient } from "models/country";
  * @param term a provided search term
  * @returns countries filtered by search term
  */
-const getCountriesByTerm = (countries: CountryClient[], term: string) => {
+const getCountriesByTerm = (countries: Country[], term: string) => {
   return [...countries].filter((country) => country.name.toLowerCase().startsWith(term));
 };
 

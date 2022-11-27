@@ -1,4 +1,6 @@
-export type Country = {
+type CountryType = "Sovereign country" | "Country" | "Dependency" | "Indeterminate" | "Disputed";
+
+export type CountryRaw = {
   scalerank: number;
   labelrank: number;
   featurecla: string;
@@ -6,7 +8,7 @@ export type Country = {
   sov_a3: string;
   adm0_dif: number;
   level: number;
-  type: string;
+  type: CountryType;
   admin: string;
   adm0_a3: string;
   geou_dif: number;
@@ -33,7 +35,7 @@ export type Country = {
   lng: number;
 };
 
-export type CountryClient = Pick<
-  Country,
+export type Country = Pick<
+  CountryRaw,
   "name" | "pop_est" | "type" | "iso_a3" | "flag_png" | "gdp_md_est" | "sovereignt" | "lat" | "lng"
 >;

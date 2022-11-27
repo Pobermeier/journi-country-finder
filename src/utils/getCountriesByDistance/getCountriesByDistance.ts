@@ -1,4 +1,4 @@
-import { type CountryClient } from "models/country";
+import { type Country } from "models/country";
 import getDistance from "utils/getDistance";
 
 /**
@@ -8,11 +8,7 @@ import getDistance from "utils/getDistance";
  * @param userLng the longitude of a user's location in degrees
  * @returns an array of countries sorted by distance to the user's position ascending
  */
-const getCountriesByDistanceToUser = (
-  countries: CountryClient[],
-  userLat: number,
-  userLng: number,
-) => {
+const getCountriesByDistanceToUser = (countries: Country[], userLat: number, userLng: number) => {
   const sortedCountries = [...countries].sort((firstCountry, secondCountry) => {
     const firstCountryDistance = getDistance(userLat, userLng, firstCountry.lat, firstCountry.lng);
     const secondCountryDistance = getDistance(

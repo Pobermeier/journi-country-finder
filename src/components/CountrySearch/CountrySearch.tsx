@@ -4,7 +4,7 @@ import { ExclamationCircleIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { useQuery } from "@tanstack/react-query";
 import debounce from "lodash.debounce";
 import clsx from "clsx";
-import { type CountryClient } from "models/country";
+import { type Country } from "models/country";
 import SuggestionList from "components/CountrySearch/components/SuggestionList";
 import CountryDetails from "components/CountryDetails";
 import Loading from "components/Loading";
@@ -19,7 +19,7 @@ const CountrySearch = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false);
   const [isDebouncing, setIsDebouncing] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState<CountryClient | null>(null);
+  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
 
   const { data: geoData } = useQuery({
     queryKey: ["coordinates"],
@@ -105,7 +105,7 @@ const CountrySearch = () => {
           )}
           onChange={handleChange}
           placeholder="Enter a country name..."
-          displayValue={(country: CountryClient) => country?.name}
+          displayValue={(country: Country) => country?.name}
         />
         {isResetBtnVisible && (
           <button
@@ -121,9 +121,7 @@ const CountrySearch = () => {
           {isFetching && <Loading className="h-5 w-5" />}
         </div>
 
-        {isDropdownRendered && (
-          <SuggestionList suggestions={countriesData.data as CountryClient[]} />
-        )}
+        {isDropdownRendered && <SuggestionList suggestions={countriesData.data as Country[]} />}
       </Combobox>
       {isError && (
         <p className="mt-2 text-sm text-red-600" role="alert">
