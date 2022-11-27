@@ -76,6 +76,8 @@ const CountrySearch = () => {
 
   const isResetBtnVisible = !!searchTerm && !isFetching;
 
+  const hasNoResults = !!searchTerm && countriesData?.success && countriesData?.data.length === 0;
+
   return (
     <>
       <Combobox
@@ -115,6 +117,11 @@ const CountrySearch = () => {
           <SuggestionList suggestions={countriesData.data as Country[]} />
         )}
       </Combobox>
+      {hasNoResults && (
+        <p className="mt-2 text-sm text-gray-600" role="alert">
+          No results found!
+        </p>
+      )}
       {isError && (
         <p className="mt-2 text-sm text-red-600" role="alert">
           {(error as Error).message}
