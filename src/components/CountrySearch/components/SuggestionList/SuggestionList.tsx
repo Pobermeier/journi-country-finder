@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Combobox } from "@headlessui/react";
 import { type Country } from "models/country";
 import SuggestionItem from "components/CountrySearch/components/SuggestionItem";
@@ -19,4 +20,4 @@ const SuggestionList = ({ suggestions }: SuggestionListProps) => {
   );
 };
 
-export default SuggestionList;
+export default memo(SuggestionList);
