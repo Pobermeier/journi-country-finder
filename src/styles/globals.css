@@ -22,7 +22,6 @@
   }
 }
 
-
 .loading rect:nth-child(1) {
   animation: four-squares-loading 1.5s infinite ease-in-out;
   animation-delay: 1s;
