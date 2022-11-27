@@ -1,9 +1,9 @@
+import React from "react";
 import { Combobox } from "@headlessui/react";
 import { ExclamationCircleIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
 import { type Country } from "models/country";
 import Loading from "components/Loading";
-import React from "react";
 
 type SearchInputProps = {
   isErrorIconVisible: boolean;
