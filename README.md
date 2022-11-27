@@ -66,7 +66,7 @@ In case there is an issue with running the app locally there is a live demo avai
 #### Get country suggestions
 
 ```http
-  POST /api/countries
+POST /api/countries
 ```
 Takes the latitude & longitude (required) of the user's current location and an optional search term.
 
