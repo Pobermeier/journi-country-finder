@@ -4,15 +4,23 @@ import Navbar from "components/Navbar";
 
 type MainLayoutProps = {
   children: React.ReactNode;
+  isIndexed?: boolean;
+  pageDescription: string;
+  pageTitle: string;
 };
 
-const MainLayout = ({ children }: MainLayoutProps) => {
+const MainLayout = ({
+  children,
+  isIndexed = false,
+  pageDescription,
+  pageTitle,
+}: MainLayoutProps) => {
   return (
     <>
       <Head>
-        <title>🥇 Journi • Country Search Coding Challenge</title>
-        <meta name="description" content="A simple country finder app" />
-        <meta name="robots" content="noindex,nofollow" />
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+        {!isIndexed && <meta name="robots" content="noindex,nofollow" />}
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="h-screen flex flex-col">

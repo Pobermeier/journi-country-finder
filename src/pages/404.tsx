@@ -22,4 +22,6 @@ const NotFoundPage = () => {
   );
 };
 
+NotFoundPage.title = "404 | Page Not Found";
+
 export default NotFoundPage;
