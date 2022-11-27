@@ -1,10 +1,9 @@
-import { useCallback, useMemo, useState } from "react";
+import { type Dispatch, type SetStateAction, useCallback, useMemo, useState } from "react";
 import { Combobox } from "@headlessui/react";
 import { useQuery } from "@tanstack/react-query";
 import debounce from "lodash.debounce";
 import { type Country } from "models/country";
 import SuggestionList from "components/CountrySearch/components/SuggestionList";
-import CountryDetails from "components/CountryDetails";
 import SearchInput from "./components/SearchInput";
 import { getCountriesBySearchTerm, getUserPosition } from "services/countries";
 
@@ -13,9 +12,13 @@ const QUERY_DEBOUNCE_MS = 300;
 const FALLBACK_LAT = 48.2;
 const FALLBACK_LNG = 16.3667;
 
-const CountrySearch = () => {
+type CountrySearchProps = {
+  selectedCountry: Country | null;
+  onCountrySelect: Dispatch<SetStateAction<Country | null>>;
+};
+
+const CountrySearch = ({ onCountrySelect, selectedCountry }: CountrySearchProps) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
 
   const { data: geoData } = useQuery({
     queryKey: ["location"],
@@ -66,7 +69,7 @@ const CountrySearch = () => {
 
   const resetSearch = () => {
     setSearchTerm("");
-    setSelectedCountry(null);
+    onCountrySelect(null);
   };
 
   const isSuggestionsDropdownOpen =
@@ -80,7 +83,7 @@ const CountrySearch = () => {
         as="div"
         className="relative mt-1 w-full sm:w-80"
         value={selectedCountry}
-        onChange={setSelectedCountry}
+        onChange={onCountrySelect}
       >
         <SearchInput
           isErrorIconVisible={isError}
@@ -103,7 +106,6 @@ const CountrySearch = () => {
           {(error as Error).message}
         </p>
       )}
-      {selectedCountry && <CountryDetails country={selectedCountry} />}
     </>
   );
 };
